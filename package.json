@@ -1,0 +1,14 @@
+{
+  "name": "tinycart",
+  "version": "1.0.0",
+  "description": "Small cart app for TASC",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Quint Jensen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
