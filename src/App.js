@@ -5,13 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const ConfigManager_1 = __importDefault(require("./ConfigManager"));
-const CartRoutes_1 = require("./CartRoutes");
 class App {
     constructor() {
         this.express = express_1.default();
         this.config = new ConfigManager_1.default();
-        this.routes = new CartRoutes_1.CartRoutes();
+        this.loadRoutes();
         console.log(this.config);
+    }
+    loadRoutes() {
+        this.express.get('/', (req, res) => {
+            res.send('This is an api for tinycart');
+        });
+        this.express.post('/product/add', (req, res) => {
+            res.send('This is for adding a product');
+        });
     }
 }
 exports.App = App;
