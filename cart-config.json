@@ -1,0 +1,12 @@
+{
+    "taxes": {
+        "sales": 10,
+        "import": 5
+    },
+    "mysql": {
+        "host": "localhost",
+        "user": "tinycart",
+        "password": "tinycart",
+        "database": "tinycart"
+    }
+}
