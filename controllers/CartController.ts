@@ -12,13 +12,41 @@ class CartController {
     }
 
     async newCart(){
-        //this.cart = new Cart();
-        let c = await this.db.persist(new Cart)
-        console.log(c)
-        return c
+        let c = new Cart()
+        let p = await this.db.persist(c)
+        return await p
     }
 
-    public addLineItems(req, response) {
+    async loadProduct(item){
+        let product = new Product({"sku": item.sku, "description": null, "price": null, "exempt": null, "imported": null})
+        let p = await this.db.retrieve(product)
+        return await p
+    }
+
+    async createLineItem(product, cartId){
+        let itemInfo = {"product": product}
+        let lineItem = new LineItem(itemInfo)
+        lineItem.cartId = this.cart.cart_id
+        console.log(this.cart)
+        let l = this.db.persist(lineItem)
+        return await l
+    }
+
+    async addLineItems(request, response){
+        this.cart = await this.newCart();
+        //console.log(this.cart)
+
+        let apiItems = request.body.lineItems
+        apiItems.forEach(async item=>{
+            let product = await this.loadProduct(item)
+            let lineItem = await this.createLineItem(product, this.cart.id)
+            //console.log(lineItem)
+        })
+
+        response.send("fin")
+    }
+
+    public addItems(req, response) {
         let cartId = req.body.cartId
         if(cartId == null) {
             let cp = this.newCart()
@@ -28,7 +56,7 @@ class CartController {
             })
             //console.log(this.cart)
         }
-        console.log(this.cart)
+
         let apiItems = req.body.lineItems
         apiItems.forEach(item=>{
             let product = new Product({"sku": item.sku, "description": null, "price": null, "exempt": null, "imported": null})

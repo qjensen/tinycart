@@ -22,13 +22,42 @@ class CartController {
     }
     newCart() {
         return __awaiter(this, void 0, void 0, function* () {
-            //this.cart = new Cart();
-            let c = yield this.db.persist(new Cart_1.default);
-            console.log(c);
-            return c;
+            let c = new Cart_1.default();
+            let p = yield this.db.persist(c);
+            return yield p;
         });
     }
-    addLineItems(req, response) {
+    loadProduct(item) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let product = new Product_1.default({ "sku": item.sku, "description": null, "price": null, "exempt": null, "imported": null });
+            let p = yield this.db.retrieve(product);
+            return yield p;
+        });
+    }
+    createLineItem(product, cartId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let itemInfo = { "product": product };
+            let lineItem = new LineItem_1.default(itemInfo);
+            lineItem.cartId = this.cart.cart_id;
+            console.log(this.cart);
+            let l = this.db.persist(lineItem);
+            return yield l;
+        });
+    }
+    addLineItems(request, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.cart = yield this.newCart();
+            //console.log(this.cart)
+            let apiItems = request.body.lineItems;
+            apiItems.forEach((item) => __awaiter(this, void 0, void 0, function* () {
+                let product = yield this.loadProduct(item);
+                let lineItem = yield this.createLineItem(product, this.cart.id);
+                //console.log(lineItem)
+            }));
+            response.send("fin");
+        });
+    }
+    addItems(req, response) {
         let cartId = req.body.cartId;
         if (cartId == null) {
             let cp = this.newCart();
@@ -38,7 +67,6 @@ class CartController {
             });
             //console.log(this.cart)
         }
-        console.log(this.cart);
         let apiItems = req.body.lineItems;
         apiItems.forEach(item => {
             let product = new Product_1.default({ "sku": item.sku, "description": null, "price": null, "exempt": null, "imported": null });

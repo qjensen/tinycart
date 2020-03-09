@@ -5,7 +5,7 @@ class Cart {
     private table
     public fields: string[]
     public pk
-    public cartId
+    public cart_id
 
     constructor() {
         this.items = []
