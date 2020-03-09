@@ -4,9 +4,9 @@
         "import": 5
     },
     "mysql": {
-        "host": "localhost",
-        "user": "tinycart",
-        "password": "tinycart",
+        "host": "192.168.86.125",
+        "user": "root",
+        "password": "root",
         "database": "tinycart"
     }
 }

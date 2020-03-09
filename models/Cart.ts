@@ -2,7 +2,17 @@ import LineItem from "./LineItem"
 
 class Cart {
     private items: Array<LineItem>
-    private dbTable = 'cart'
+    private table
+    public fields: string[]
+    public pk
+    public cartId
+
+    constructor() {
+        this.items = []
+        this.table = "cart"
+        this.pk = "cart_id"
+        this.fields = ["cart_id", "date_created"]
+    }
 
     public addItem(item: LineItem) {
 
@@ -20,3 +30,5 @@ class Cart {
         
     }
 }
+
+export default Cart

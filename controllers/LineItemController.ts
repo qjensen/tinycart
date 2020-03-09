@@ -1,6 +1,9 @@
+import Product from "../models/Product" 
+import LineItem from "../models/LineItem"
+
 class LineItemController {
 
-    newLineItem(){
+    constructor(){
         
     }
 }

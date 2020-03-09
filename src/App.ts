@@ -1,42 +1,44 @@
 import express from "express";
+import { CookieParser } from "cookie-parser"
 import ConfigManager from "./ConfigManager";
+import ProductController from '../controllers/ProductController'
+import CartController from '../controllers/CartController'
 
 export class App {
-    public express
+    public app
     public config
+    private productController
+    private cartController
 
     constructor() {
-        this.express = express()
+        this.app = express()
+        this.app.use(express.json())
+        //this.app.use(CookieParser())
         this.config = new ConfigManager()
         this.loadRoutes();
-        console.log(this.config)
+        this.productController = new ProductController();
+        this.cartController = new CartController()
     }
 
     private loadRoutes() {
-        this.express.get('/', (req, res)=>{
+        this.app.get('/', (req, res)=>{
             res.send('This is an api for tinycart');
-         });
+        });
 
-         this.express.post('/product/add/:prodJson', (req, res)=>{
-            res.send('This is for adding a product')
-         })
+        // add one or more products to the database
+        // from an array of json objects
+        this.app.post('/product/add/', (req, res) => (this.productController.createProduct(req,res)))
 
-         this.express.get('/product/load/:prodId', (req, res)=>{
-             res.send('This is for loading a product')
-         })
+        //this.app.get('/cart/new', (req, res)=>(this.cartController.addLineItems(req,res)))
 
-         this.express.put('/product/update/:prodId', (req, res)=>{
-            res.send('This would update an existing product')
-         })
+        this.app.post('/cart/add_item/:cartId/', (req, res)=>{
+            res.send('This would add an item to an existing cart')
+        })
 
-         this.express.get('/cart/new', (req, res)=>{
-             res.send('Create a new cart')
-         })
-
-         this.express.post('/cart/add_item/:itemInfo', (req, res)=>{
-             res.send('This will add an item to the cart')
-         })
+        // create and load a cart from a json object
+        // containing one or more line items
+        this.app.post('/cart/load/',  (req, res)=>(this.cartController.addLineItems(req,res)))
     }
 }
 
-export default new App().express
+export default new App().app
